@@ -6,7 +6,7 @@ namespace LibServer
 
         public int Author { get; set; }
 
-        public int CoAuthor => 32 + (int)(TemperatureC / 0.5556);
+        public int CoAuthor => 32 + (int)(Author / 0.5556);
 
         public string? Summary { get; set; }
     }
