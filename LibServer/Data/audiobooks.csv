@@ -1,0 +1,10 @@
+id,bookid,title,author,language,narrator,publisher,publicationYear
+1,4,handmaids tale,atwood,eng,guy1,pub1,1998
+2,2,bloodborne,miyazaki,jpn,guy2,pub2,2005
+3,7,in the rye,saliger,eng,guuy3,puby3,2006
+4,5,alcemik,paolo,pol,guy4,pub4,1503
+5,8,gatspy,fitzg,eng,guy5,pub5,2995
+6,1,the reader,read,eng,gut6,pub6,2441
+7,6,bookone,authortwo,eng,guy7,pub7,1956
+8,3,booktwo,authorthree,eng,guy8,pub8,1846
+9,9,book3,authoerfour,eng,guy9,pub9,1764

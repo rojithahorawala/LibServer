@@ -10,6 +10,7 @@ namespace MediaModel;
 [Table("audiobooks")]
 public partial class Audiobook
 {
+    [Key]
     [Column("id")]
     public int Id { get; set; }
 

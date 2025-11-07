@@ -55,6 +55,20 @@ namespace MediaModel.Migrations
                 name: "IX_audiobooks_bookid",
                 table: "audiobooks",
                 column: "bookid");
+
+
+            migrationBuilder.AlterColumn<string>(
+                name: "coAuthor",
+                table: "books",
+                type: "nchar(25)",
+                nullable: false,
+                defaultValue: "",    // default empty string
+                oldClrType: typeof(string),
+                oldType: "nchar(25)");
+
+
+
+
         }
 
         /// <inheritdoc />

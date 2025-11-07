@@ -23,7 +23,7 @@ public partial class Book
 
     [Column("coAuthor")]
     [StringLength(25)]
-    public string CoAuthor { get; set; } = null!;
+    public string? CoAuthor { get; set; } = null!;
 
     [Column("language")]
     [StringLength(3)]
@@ -35,4 +35,6 @@ public partial class Book
 
     [Column("publicationYear")]
     public int PublicationYear { get; set; }
+    //public string Name { get; set; }
+    //public string Name { get; set; }
 }

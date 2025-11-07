@@ -3,6 +3,7 @@ using MediaModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MediaModel.Migrations
 {
     [DbContext(typeof(BooksContext))]
-    partial class BooksContextModelSnapshot : ModelSnapshot
+    [Migration("20251023193712_MakeCoAuthorNullable")]
+    partial class MakeCoAuthorNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,13 +26,6 @@ namespace MediaModel.Migrations
 
             modelBuilder.Entity("MediaModel.Audiobook", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<string>("Author")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -40,6 +36,13 @@ namespace MediaModel.Migrations
                     b.Property<int>("Bookid")
                         .HasColumnType("int")
                         .HasColumnName("bookid");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Language")
                         .IsRequired()
@@ -76,11 +79,9 @@ namespace MediaModel.Migrations
                         .HasColumnName("title")
                         .IsFixedLength();
 
-                    b.HasKey("Id");
-
                     b.HasIndex("Bookid");
 
-                    b.ToTable("audiobooks", (string)null);
+                    b.ToTable("audiobooks");
                 });
 
             modelBuilder.Entity("MediaModel.Book", b =>

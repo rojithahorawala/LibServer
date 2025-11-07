@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
+
 namespace MediaModel;
 
 public partial class BooksContext : DbContext
@@ -13,6 +17,7 @@ public partial class BooksContext : DbContext
     public BooksContext(DbContextOptions<BooksContext> options)
         : base(options)
     {
+
     }
 
     public virtual DbSet<Audiobook> Audiobooks { get; set; }
@@ -20,8 +25,24 @@ public partial class BooksContext : DbContext
     public virtual DbSet<Book> Books { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("data source=(localdb)\\mssqllocaldb; initial catalog=booksGolden");
+    {
+
+
+        if (!optionsBuilder.IsConfigured)
+        {
+            var config = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile("appsettings.Development.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
+
+            var cs = config.GetConnectionString("DefaultConnection")
+                        ?? "Server=(localdb)\\mssqllocaldb;Initial Catalog=booksGolden;TrustServerCertificate=True";
+
+            optionsBuilder.UseSqlServer(cs);
+        }
+    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,6 +55,13 @@ public partial class BooksContext : DbContext
             entity.Property(e => e.PublicationYear).IsFixedLength();
             entity.Property(e => e.Publisher).IsFixedLength();
             entity.Property(e => e.Title).IsFixedLength();
+
+            entity.HasKey(a => a.Id);           // explicit, in case naming isn’t standard
+            entity.ToTable("audiobooks");       // match your actual table
+            entity.Property(a => a.Id).ValueGeneratedOnAdd();
+            entity.HasOne(a => a.Book)
+                  .WithOne()                    // or .WithMany(b => b.Audiobooks) if 1:N
+                  .HasForeignKey<Audiobook>(a => a.Bookid);
 
             entity.HasOne(d => d.Book).WithMany()
                 .OnDelete(DeleteBehavior.ClientSetNull)
