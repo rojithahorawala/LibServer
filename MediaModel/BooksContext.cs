@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-
-
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
 
@@ -28,24 +27,35 @@ public partial class BooksContext : DbContext
     {
 
 
+        //if (!optionsBuilder.IsConfigured)
+        //{
+        //    var config = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
+        //        .AddJsonFile("appsettings.json", optional: true)
+        //        .AddJsonFile("appsettings.Development.json", optional: true)
+        //        .AddEnvironmentVariables()
+        //        .Build();
+
+        //    var cs = config.GetConnectionString("DefaultConnection")
+        //                ?? "Server=(localdb)\\mssqllocaldb;Initial Catalog=booksGolden;TrustServerCertificate=True";
+
+        //    optionsBuilder.UseSqlServer(cs);
+        //}
+
+        IConfigurationBuilder builder = new ConfigurationBuilder()
+         .AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json", optional: true);
+
+        IConfiguration config = builder.Build();
         if (!optionsBuilder.IsConfigured)
         {
-            var config = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true)
-                .AddJsonFile("appsettings.Development.json", optional: true)
-                .AddEnvironmentVariables()
-                .Build();
-
-            var cs = config.GetConnectionString("DefaultConnection")
-                        ?? "Server=(localdb)\\mssqllocaldb;Initial Catalog=booksGolden;TrustServerCertificate=True";
-
-            optionsBuilder.UseSqlServer(cs);
+            optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
         }
+
     }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder); 
         modelBuilder.Entity<Audiobook>(entity =>
         {
             entity.Property(e => e.Author).IsFixedLength();
@@ -56,11 +66,11 @@ public partial class BooksContext : DbContext
             entity.Property(e => e.Publisher).IsFixedLength();
             entity.Property(e => e.Title).IsFixedLength();
 
-            entity.HasKey(a => a.Id);           // explicit, in case naming isn’t standard
-            entity.ToTable("audiobooks");       // match your actual table
+            entity.HasKey(a => a.Id);          
+            entity.ToTable("audiobooks");      
             entity.Property(a => a.Id).ValueGeneratedOnAdd();
             entity.HasOne(a => a.Book)
-                  .WithOne()                    // or .WithMany(b => b.Audiobooks) if 1:N
+                  .WithOne()                  
                   .HasForeignKey<Audiobook>(a => a.Bookid);
 
             entity.HasOne(d => d.Book).WithMany()
