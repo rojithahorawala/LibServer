@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MediaModel
 {
-    internal class MediaUserModel : IdentityUser
+    public class MediaUserModel : IdentityUser
     {
     }
 }

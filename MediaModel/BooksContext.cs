@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration.EnvironmentVariables;
 
 namespace MediaModel;
 
-public partial class BooksContext : DbContext
+public partial class BooksContext : IdentityDbContext<MediaUserModel>
 {
     public BooksContext()
     {
