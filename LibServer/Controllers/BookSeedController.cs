@@ -1,13 +1,14 @@
-﻿using MediaModel;
-using CsvHelper;
+﻿using CsvHelper;
 using CsvHelper.Configuration;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using MediaModel.Migrations;
 using LibServer.Data;
+using MediaModel;
+using MediaModel.Migrations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Globalization;
 
 
 
@@ -15,7 +16,13 @@ namespace LibServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookSeedController(BooksContext context, IHostEnvironment environment) : ControllerBase
+    public class BookSeedController(
+        BooksContext context, 
+        IHostEnvironment environment,
+        IConfiguration configuration,
+        RoleManager<IdentityRole> roleManager,
+        UserManager<MediaUserModel> userManager
+        ) : ControllerBase
     {
         string _pathName = Path.Combine(environment.ContentRootPath, "Data/audiobooks.csv"); 
 
@@ -99,5 +106,49 @@ namespace LibServer.Controllers
             return Ok();
         }
 
+        [HttpPost("Users")]
+        public async Task<ActionResult> PostUsers()
+        {
+
+            string administrator = "administrator";
+            string registedUser = "registedUser";
+
+            if (!await roleManager.RoleExistsAsync(administrator))
+            {
+                await roleManager.CreateAsync(new IdentityRole(administrator));
+
+            }
+            if (!await roleManager.RoleExistsAsync(registedUser))
+            {
+                await roleManager.CreateAsync(new IdentityRole(registedUser));
+            }
+            MediaUserModel adminUser = new()
+            {
+                UserName = "admin",
+                Email = "srj8994@gmail.com",
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            await userManager.CreateAsync(adminUser, configuration["DefaultPassword:admin"]!);
+            await userManager.AddToRoleAsync(adminUser, administrator);
+
+            MediaUserModel regularUser = new()
+            {
+                UserName = "user",
+                Email = "user456@gmail.edu",
+                EmailConfirmed = true,
+                LockoutEnabled = false,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            string? x  = configuration["DefaultPassword:user"!];
+            IdentityResult ir = await userManager.CreateAsync(regularUser, x!);
+            await userManager.AddToRoleAsync(regularUser, registedUser);
+
+
+            return Ok();
+        }
     }
 }

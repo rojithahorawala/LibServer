@@ -1,6 +1,9 @@
+using LibServer;
 using MediaModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +16,14 @@ builder.Services.AddDbContext<BooksContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 });
+builder.Services.AddIdentity<MediaUserModel, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    //options.Password.RequireUppercase = false;
+}).AddEntityFrameworkStores<BooksContext>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddScoped<JWTHandler>();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer(); // For minimal APIs in .NET 6+
 builder.Services.AddSwaggerGen(c =>
@@ -35,6 +44,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

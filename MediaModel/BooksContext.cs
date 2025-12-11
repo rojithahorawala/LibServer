@@ -9,6 +9,7 @@ namespace MediaModel;
 
 public partial class BooksContext : IdentityDbContext<MediaUserModel>
 {
+    
     public BooksContext()
     {
     }
