@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MediaModel;
 using LibServer.DTO;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LibServer.Controllers
 {
@@ -18,6 +19,7 @@ namespace LibServer.Controllers
 
         // GET: api/Books
         [HttpGet]
+        //[Authorize]
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
         {
             return await context.Books.ToListAsync();

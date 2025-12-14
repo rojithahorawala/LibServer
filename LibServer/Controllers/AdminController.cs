@@ -24,27 +24,24 @@ namespace LibServer.Controllers
             MediaUserModel? mediaUser = await userManager.FindByNameAsync(loginRequest.Username);
             if (mediaUser == null)
             {
-                return Unauthorized("Username is Invalid");
+                return Unauthorized("Invalid username");
             }
             bool loginStatus = await userManager.CheckPasswordAsync(mediaUser, loginRequest.Password);
             if (!loginStatus)
             {
-                return Unauthorized("Password is Invalid");
+                return Unauthorized("Invalid password");
             }
 
 
-            JwtSecurityToken jwtToken = await JWTHandler.GenerateAsyncToken(mediaUser);
+            JwtSecurityToken jwtToken = await JWTHandler.GenerateTokenAsync(mediaUser);
             string stringToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
-            return Ok
-            (
-            new LoginResponse
+            return Ok(new LoginResponse
             {
                 Success = true,
                 Message = "Login successful",
                 Token = stringToken
-            }
-            );
+            });
         }
     }
 }

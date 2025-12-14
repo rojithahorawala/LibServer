@@ -1,9 +1,12 @@
 using LibServer;
 using MediaModel;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,30 @@ builder.Services.AddIdentity<MediaUserModel, IdentityRole>(options =>
     //options.Password.RequireUppercase = false;
 }).AddEntityFrameworkStores<BooksContext>();
 
+
+builder.Services.AddAuthentication(c =>
+{
+    c.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    c.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(c =>
+{
+    c.TokenValidationParameters = new()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey
+        (
+        Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!)
+        )
+
+    };
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddScoped<JWTHandler>();
 builder.Services.AddOpenApi();
@@ -29,7 +56,29 @@ builder.Services.AddEndpointsApiExplorer(); // For minimal APIs in .NET 6+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    OpenApiSecurityScheme securityScheme = new()
+    {
+        Name = "Lib Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = JwtBearerDefaults.AuthenticationScheme,
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Enter JWT Bearer Token",
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = JwtBearerDefaults.AuthenticationScheme
+            }
+    };
+    c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, securityScheme);
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        { securityScheme, Array.Empty<string>() }
+    });
+
 });
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
