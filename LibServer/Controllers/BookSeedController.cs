@@ -32,8 +32,23 @@ namespace LibServer.Controllers
         public async Task<ActionResult> PostBook()
         {
 
-            Dictionary<string, Book> books = await context.Books.AsNoTracking().
-            ToDictionaryAsync(c => c.Title, StringComparer.OrdinalIgnoreCase);
+            //Dictionary<string, Book> books = await context.Books.AsNoTracking().
+            //ToDictionaryAsync(c => c.Title, StringComparer.OrdinalIgnoreCase);
+            
+            var existingBooks = await context.Books
+                .AsNoTracking()
+                .ToListAsync();
+
+            var books = new Dictionary<string, Book>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var b in existingBooks)
+            {
+                if (!string.IsNullOrWhiteSpace(b.Title) && !books.ContainsKey(b.Title))
+                {
+                    books.Add(b.Title, b);
+                }
+              
+            }
 
             CsvConfiguration config = new(CultureInfo.InvariantCulture)
             {
@@ -69,41 +84,150 @@ namespace LibServer.Controllers
         [HttpPost("Audiobook")]
         public async Task<ActionResult> PostAudiobook()
         {
-            Dictionary<string, Book> Books = await context.Books.AsNoTracking().
-            ToDictionaryAsync(c => c.Title, StringComparer.OrdinalIgnoreCase);
+            //Dictionary<string, Book> Books = await context.Books.AsNoTracking().
+            //ToDictionaryAsync(c => c.Title, StringComparer.OrdinalIgnoreCase);
 
-            CsvConfiguration config = new(CultureInfo.InvariantCulture)
+
+            //var existingBooks = await context.Books
+            //  .AsNoTracking()
+            //  .ToListAsync();
+
+            //var books = new Dictionary<string, Book>(StringComparer.OrdinalIgnoreCase);
+
+            //CsvConfiguration config = new(CultureInfo.InvariantCulture)
+            //{
+            //    HasHeaderRecord = true,
+            //    HeaderValidated = null
+            //};
+
+            //using StreamReader reader = new(_pathName);
+            //using CsvReader csv = new(reader, config);
+            //List<Audiobookscsv> records = csv.GetRecords<Audiobookscsv>().ToList();
+
+            //int Audiobookcount = 0;
+
+            //foreach (Audiobookscsv record in records)
+            //{
+            //    if (Books.TryGetValue(record.title, out Book? book))
+            //    {
+            //        Audiobook audiobook = new()
+            //        {
+            //            Id = (int)book.Id,
+            //            //Title = record.title,
+            //            //Author = record.author,
+            //            Language = record.language,
+            //            Narrator = record.narrator,
+
+            //        };
+            //        await context.Audiobooks.AddAsync(audiobook);
+            //        //Audiobookcount++;
+            //    }
+            //}
+            // Load existing books
+//--------------------------------------------------------------------------
+            //var existingBooks = await context.Books
+            //    .AsNoTracking()
+            //    .ToListAsync();
+
+            //// Build a safe dictionary ignoring duplicate titles
+            //var Books = new Dictionary<string, Book>(StringComparer.OrdinalIgnoreCase);
+
+            //foreach (var b in existingBooks)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(b.Title) && !Books.ContainsKey(b.Title))
+            //    {
+            //        Books.Add(b.Title, b);
+            //    }
+            //}
+
+            //CsvConfiguration config = new(CultureInfo.InvariantCulture)
+            //{
+            //    HasHeaderRecord = true,
+            //    HeaderValidated = null
+            //};
+
+            //using StreamReader reader = new(_pathName);
+            //using CsvReader csv = new(reader, config);
+            //List<Audiobookscsv> records = csv.GetRecords<Audiobookscsv>().ToList();
+
+            //int Audiobookcount = 0;
+
+            //foreach (Audiobookscsv record in records)
+            //{
+            //    if (Books.TryGetValue(record.title, out Book? book))
+            //    {
+            //        Audiobook audiobook = new()
+            //        {
+            //            Id = (int)book.Id,
+            //            Language = record.language,
+            //            Narrator = record.narrator,
+            //        };
+            //        await context.Audiobooks.AddAsync(audiobook);
+            //        //Audiobookcount++;
+            //    }
+            //}
+
+            //await context.SaveChangesAsync();
+            //return Ok();
+//--------------------------------------------------------------------------
+              // 1) Load books and build a safe dictionary by *trimmed* title
+    var existingBooks = await context.Books
+        .AsNoTracking()
+        .ToListAsync();
+
+    var booksByTitle = new Dictionary<string, Book>(StringComparer.OrdinalIgnoreCase);
+
+    foreach (var b in existingBooks)
+    {
+        var key = b.Title?.Trim();                // 👈 trim padding
+
+        if (!string.IsNullOrWhiteSpace(key) && !booksByTitle.ContainsKey(key))
+        {
+            booksByTitle.Add(key, b);
+        }
+    }
+
+    // 2) CSV config
+    CsvConfiguration config = new(CultureInfo.InvariantCulture)
+    {
+        HasHeaderRecord = true,
+        HeaderValidated = null,
+        MissingFieldFound = null
+    };
+
+    using StreamReader reader = new(_pathName);
+    using CsvReader csv = new(reader, config);
+    List<Audiobookscsv> records = csv.GetRecords<Audiobookscsv>().ToList();
+
+    int created = 0;
+
+    foreach (var record in records)
+    {
+        var titleKey = record.title?.Trim();      // 👈 trim CSV title too
+
+        if (!string.IsNullOrWhiteSpace(titleKey) &&
+            booksByTitle.TryGetValue(titleKey, out Book? book))
+        {
+            var audiobook = new Audiobook
             {
-                HasHeaderRecord = true,
-                HeaderValidated = null
+                Bookid = book.Id,                 // FK: relational link
+
+                Title = record.title,
+                Author = record.author,
+                Language = record.language,
+                Narrator = record.narrator,
+                Publisher = record.publisher,
+                PublicationYear = record.publicationYear
             };
 
-            using StreamReader reader = new(_pathName);
-            using CsvReader csv = new(reader, config);
-            List<Audiobookscsv> records = csv.GetRecords<Audiobookscsv>().ToList();
+            await context.Audiobooks.AddAsync(audiobook);
+            created++;
+        }
+    }
 
-            int Audiobookcount = 0;
+    await context.SaveChangesAsync();
+    return Ok(new { created });
 
-            foreach (Audiobookscsv record in records)
-            {
-                if (Books.TryGetValue(record.title, out Book? book))
-                {
-                    Audiobook audiobook = new()
-                    {
-                        Id = (int)book.Id,
-                        //Title = record.title,
-                        //Author = record.author,
-                        Language = record.language,
-                        Narrator = record.narrator,
-      
-                    };
-                    await context.Audiobooks.AddAsync(audiobook);
-                    //Audiobookcount++;
-                }
-            }
-
-            await context.SaveChangesAsync();
-            return Ok();
         }
 
         [HttpPost("Users")]

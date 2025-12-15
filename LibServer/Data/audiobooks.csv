@@ -1,10 +1,51 @@
 id,bookid,title,author,language,narrator,publisher,publicationYear
-1,4,handmaids tale,atwood,eng,guy1,pub1,1998
-2,2,bloodborne,miyazaki,jpn,guy2,pub2,2005
-3,7,in the rye,saliger,eng,guuy3,puby3,2006
-4,5,alcemik,paolo,pol,guy4,pub4,1503
-5,8,gatspy,fitzg,eng,guy5,pub5,2995
-6,1,the reader,read,eng,gut6,pub6,2441
-7,6,bookone,authortwo,eng,guy7,pub7,1956
-8,3,booktwo,authorthree,eng,guy8,pub8,1846
-9,9,book3,authoerfour,eng,guy9,pub9,1764
+1,4,Handmaids Tale,Atwood,eng,David Attenborough,Penguin,1998
+2,2,Bloodborne,Miyazaki,jpn,Morgan Freeman,HarperCollins,2005
+3,7,In the Rye,Saliger,eng,James Earl Jones,Simon,2006
+4,5,Alcemik,Paolo,pol,Sigourney Weaver,Hachette,1503
+5,8,Gatspy,Fitzgerald,eng,Peter Coyote,Macmillan,2995
+6,1,The Reader,Read,chi,Cate Blanchett,Scholastic,2441
+7,6,Beloved,Stephen,sin,Patrick Stewart,Wiley,1956
+8,3,Dracula,Agatha,eng,Werner Herzog,McGraw,1846
+9,9,Rebecca,Rowling,eng,Keith David,Oxford,1764
+10,10,Ulysses,George,kor,Helen Mirren,Cambridge,2000
+11,11,Hamlet,Jane,pol,Liam Neeson,Bloomberg,2004
+12,12,Candide,Mark,sin,Samuel L. Jackson,Tor,1981
+13,13,Frankenstein,Ernest,kor,Rosamund Pike,Crown,1874
+14,14,Inferno,Toni,jpn,Benedict Cumberbatch,Vintage,2001
+15,15,Persuasion,Neil,pnj,Gillian Anderson,Orbit,1994
+16,16,Moonrise,Isaac,thi,Tom Hanks,Kensington,1984
+17,17,Shogun,Haruki,vie,Judi Dench,Bonnier,2005
+18,18,Evermore,James,cnt,Keanu Reeves,Workman,2004
+19,19,Birdsong,Mary,arm,Tilda Swinton,Greywolf,2009
+20,20,Fowl,Brandon,spn,Mark Hamill,Sourcebooks,2015
+21,21,Starlight,Tolkien,eng,Attenborough,Randomleaf,2995
+22,22,Kingdoms,Lewis,eng,Freeman,Silverline,2441
+23,23,Whisperbound,Dick,pol,Johansson,Evergreen,1956
+24,24,Everwinter,Butler,eng,Fassbender,Northwind,1846
+25,25,Moonshadow,Clarke,chi,Winslet,Ironbridge,1764
+26,26,Ravensong,Atwood,sin,Goldblum,Mooncrest,2000
+27,27,Firegarden,LeGuin,eng,Portman,Lakeside,2004
+28,28,Stormtider,Bradbury,eng,McConaughey,Starfall,1981
+29,29,Hinterlands,Vonnegut,kor,Fishburne,Riverside,1874
+30,30,Dreamweaver,Adichie,pol,Whitaker,Highridge,2001
+31,31,Nightbloom,Ishiguro,sin,Cox,Brightwood,1994
+32,32,Wanderlust,Tartt,kor,Ejiofor,Cedarline,2995
+33,33,Silvershade,Whitehead,jpn,Fiennes,Redstone,2441
+34,34,Dawnbreaker,Mantel,pnj,Thompson,Goldbranch,1956
+35,35,Starweaver,Steinbeck,thi,Cheadle,Oakridge,1846
+36,36,Sunfallen,Fitzgerald,vie,Elba,Windmere,1764
+37,37,Mistbound,Marquez,cnt,Davis,Seabrook,2000
+38,38,Timberwolf,Ferrante,arm,Malek,Hillcrest,2004
+39,39,Ironflower,Alcott,spn,Saldana,Maplewood,1764
+40,40,Shadowmere,Plath,cnt,Kingsley,Stonegate,2000
+41,41,Frostwoven,Rankin,arm,Weisz,Bluehaven,2004
+42,42,Redwinter,Highsmith,spn,Tucci,Frostfield,1981
+43,43,Glimmering,Mankell,pol,Connelly,Aurorawood,1874
+44,44,Wayfarers,Nesbo,eng,Craig,Greenvale,2001
+45,45,Thornfield,Rice,chi,Bassett,Nightshade,1994
+46,46,Luminary,Crichton,sin,Ali,Silverbrook,1984
+47,47,Gravemind,Hobb,eng,Isaac,Sunspire,2005
+48,48,Celestium,Pratchett,eng,Kidman,Cloudrest,2004
+49,49,Moonriver,Stephenson,kor,Jackman,Harborview,2009
+50,50,Heartforge,Mieville,pol,Goldberg,Ironvale,2015

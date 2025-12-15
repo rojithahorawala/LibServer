@@ -19,7 +19,7 @@ namespace LibServer.Controllers
 
         // GET: api/Books
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
         {
             return await context.Books.ToListAsync();
