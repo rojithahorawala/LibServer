@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MediaModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MediaModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LibServer.Controllers
 {
@@ -22,6 +23,7 @@ namespace LibServer.Controllers
 
         // GET: api/Audiobooks
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Audiobook>>> GetAudiobooks()
         {
             return await _context.Audiobooks.ToListAsync();

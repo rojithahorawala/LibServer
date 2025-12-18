@@ -8,8 +8,8 @@
 
         public int PopularityChartCount { get; set; }
 
-        public int MyNumber { get; set; }
+        public string? Store { get; set; }
 
-        
+
     }
 }

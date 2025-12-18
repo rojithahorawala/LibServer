@@ -59,6 +59,8 @@ namespace LibServer.Controllers
             using CsvReader csv = new(reader, config);
             List<Audiobookscsv> records = csv.GetRecords<Audiobookscsv>().ToList();
 
+
+
             foreach(Audiobookscsv record in records)
             {
                 if (!books.ContainsKey(record.title))
@@ -69,7 +71,7 @@ namespace LibServer.Controllers
                         Author = record.author,
                         Language = record.language,
                         Publisher = record.publisher,
-
+                        PublicationYear = int.Parse(record.publicationYear)
                     };
                     books.Add(book.Title, book);
                     await context.Books.AddAsync(book); 
@@ -84,93 +86,8 @@ namespace LibServer.Controllers
         [HttpPost("Audiobook")]
         public async Task<ActionResult> PostAudiobook()
         {
-            //Dictionary<string, Book> Books = await context.Books.AsNoTracking().
-            //ToDictionaryAsync(c => c.Title, StringComparer.OrdinalIgnoreCase);
 
 
-            //var existingBooks = await context.Books
-            //  .AsNoTracking()
-            //  .ToListAsync();
-
-            //var books = new Dictionary<string, Book>(StringComparer.OrdinalIgnoreCase);
-
-            //CsvConfiguration config = new(CultureInfo.InvariantCulture)
-            //{
-            //    HasHeaderRecord = true,
-            //    HeaderValidated = null
-            //};
-
-            //using StreamReader reader = new(_pathName);
-            //using CsvReader csv = new(reader, config);
-            //List<Audiobookscsv> records = csv.GetRecords<Audiobookscsv>().ToList();
-
-            //int Audiobookcount = 0;
-
-            //foreach (Audiobookscsv record in records)
-            //{
-            //    if (Books.TryGetValue(record.title, out Book? book))
-            //    {
-            //        Audiobook audiobook = new()
-            //        {
-            //            Id = (int)book.Id,
-            //            //Title = record.title,
-            //            //Author = record.author,
-            //            Language = record.language,
-            //            Narrator = record.narrator,
-
-            //        };
-            //        await context.Audiobooks.AddAsync(audiobook);
-            //        //Audiobookcount++;
-            //    }
-            //}
-            // Load existing books
-//--------------------------------------------------------------------------
-            //var existingBooks = await context.Books
-            //    .AsNoTracking()
-            //    .ToListAsync();
-
-            //// Build a safe dictionary ignoring duplicate titles
-            //var Books = new Dictionary<string, Book>(StringComparer.OrdinalIgnoreCase);
-
-            //foreach (var b in existingBooks)
-            //{
-            //    if (!string.IsNullOrWhiteSpace(b.Title) && !Books.ContainsKey(b.Title))
-            //    {
-            //        Books.Add(b.Title, b);
-            //    }
-            //}
-
-            //CsvConfiguration config = new(CultureInfo.InvariantCulture)
-            //{
-            //    HasHeaderRecord = true,
-            //    HeaderValidated = null
-            //};
-
-            //using StreamReader reader = new(_pathName);
-            //using CsvReader csv = new(reader, config);
-            //List<Audiobookscsv> records = csv.GetRecords<Audiobookscsv>().ToList();
-
-            //int Audiobookcount = 0;
-
-            //foreach (Audiobookscsv record in records)
-            //{
-            //    if (Books.TryGetValue(record.title, out Book? book))
-            //    {
-            //        Audiobook audiobook = new()
-            //        {
-            //            Id = (int)book.Id,
-            //            Language = record.language,
-            //            Narrator = record.narrator,
-            //        };
-            //        await context.Audiobooks.AddAsync(audiobook);
-            //        //Audiobookcount++;
-            //    }
-            //}
-
-            //await context.SaveChangesAsync();
-            //return Ok();
-//--------------------------------------------------------------------------
-              // 1) Load books and build a safe dictionary by *trimmed* title
     var existingBooks = await context.Books
         .AsNoTracking()
         .ToListAsync();
@@ -179,7 +96,7 @@ namespace LibServer.Controllers
 
     foreach (var b in existingBooks)
     {
-        var key = b.Title?.Trim();                // 👈 trim padding
+        var key = b.Title?.Trim();                
 
         if (!string.IsNullOrWhiteSpace(key) && !booksByTitle.ContainsKey(key))
         {
