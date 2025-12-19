@@ -3,6 +3,7 @@ using CsvHelper.Configuration;
 using LibServer.Data;
 using MediaModel;
 using MediaModel.Migrations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -84,6 +85,7 @@ namespace LibServer.Controllers
         }
 
         [HttpPost("Audiobook")]
+        [Authorize]
         public async Task<ActionResult> PostAudiobook()
         {
 
@@ -148,6 +150,7 @@ namespace LibServer.Controllers
         }
 
         [HttpPost("Users")]
+        [Authorize]
         public async Task<ActionResult> PostUsers()
         {
 

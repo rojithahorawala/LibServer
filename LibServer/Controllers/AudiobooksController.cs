@@ -23,7 +23,7 @@ namespace LibServer.Controllers
 
         // GET: api/Audiobooks
         [HttpGet]
-        [Authorize]
+    
         public async Task<ActionResult<IEnumerable<Audiobook>>> GetAudiobooks()
         {
             return await _context.Audiobooks.ToListAsync();
@@ -46,6 +46,7 @@ namespace LibServer.Controllers
         // PUT: api/Audiobooks/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutAudiobook(int id, Audiobook audiobook)
         {
             if (id != audiobook.Id)
@@ -87,6 +88,7 @@ namespace LibServer.Controllers
 
         // DELETE: api/Audiobooks/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteAudiobook(int id)
         {
             var audiobook = await _context.Audiobooks.FindAsync(id);

@@ -19,7 +19,7 @@ namespace LibServer.Controllers
 
         // GET: api/Books
         [HttpGet]
-        [Authorize]
+        
         public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
         {
             return await context.Books.ToListAsync();
@@ -46,6 +46,7 @@ namespace LibServer.Controllers
 
         // GET: api/Books/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Book>> GetBook(int id)
         {
             var book = await context.Books.FindAsync(id);
@@ -60,6 +61,7 @@ namespace LibServer.Controllers
 
 
         [HttpGet("Inventory/{id}")]
+        [Authorize]
         public ActionResult<Inventory> GetInventory(int id)
         {
             var book = context.Books.Select(book => new Inventory
@@ -88,6 +90,7 @@ namespace LibServer.Controllers
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutBook(int id, Book book)
         {
             if (id != book.Id)
@@ -119,6 +122,7 @@ namespace LibServer.Controllers
         // POST: api/Books
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
             context.Books.Add(book);
@@ -129,6 +133,7 @@ namespace LibServer.Controllers
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteBook(int id)
         {
             var book = await context.Books.FindAsync(id);
