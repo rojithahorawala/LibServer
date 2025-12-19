@@ -23,7 +23,7 @@ namespace LibServer.Controllers
 
         // GET: api/Audiobooks
         [HttpGet]
-    
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Audiobook>>> GetAudiobooks()
         {
             return await _context.Audiobooks.ToListAsync();
